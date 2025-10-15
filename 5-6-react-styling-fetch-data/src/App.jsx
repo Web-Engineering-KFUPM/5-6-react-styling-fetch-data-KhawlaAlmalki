@@ -324,6 +324,10 @@ import UserModal from './components/UserModal'
 
 function App() {
   const [users, setUsers] = useState([])
+    const [filteredUsers, setFilteredUsers] = useState([]); // grid source
+    const [searchTerm, setSearchTerm] = useState("");       // search term
+    const [showModal, setShowModal] = useState(false);      // modal vis
+    const [selectedUser, setSelectedUser] = useState(null); // modal data
 
   useEffect(() => {
     {/*API fetch logic*/}
@@ -331,34 +335,41 @@ function App() {
   }, [])
 
   const handleUserClick = (user) => {
+      setSelectedUser(user);
+      setShowModal(true);
   }
 
   const handleCloseModal = () => {
+      setShowModal(false);
+      setSelectedUser(null);
   }
 
   return (
     <div className="app">
-      <header className="">
+      <header className="bg-primary text-white py-3 mb-4 shadow">
         <Container>
-          <h1 className="">User Management Dashboard</h1>
-          <p className="">Manage and view user information</p>
+          <h1 className="h2 mb-0">User Management Dashboard</h1>
+          <p className="mb-0 opacity-75">Manage and view user information</p>
         </Container>
       </header>
 
-      <Container className="">
+      <Container className="mb-4">
         <SearchBar />
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
 
-        {/* {loading && <Spinner ... />} */}
+          {/* {loading && <Spinner ... />} */}
         {/* {error && <Alert ...>{error}</Alert>} */}
         {/* <UserList users={filteredUsers} onUserClick={handleUserClick} /> */}
-
-        <UserModal />
+          <UserList users={filteredUsers} onUserClick={handleUserClick} />
+          <UserModal show={showModal} user={selectedUser} onHide={handleCloseModal} />
       </Container>
 
-      <footer className="">
+
+        <footer className="bg-light py-4 mt-5">
         <Container>
-          <p className="text-center text-muted mb-0">
-            &copy; 2024 User Management Dashboard
+            <p className="text-center text-muted mb-0">
+                &copy; {new Date().getFullYear()} User Management Dashboard
           </p>
         </Container>
       </footer>
